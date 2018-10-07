@@ -84,6 +84,8 @@ void database::reindex( fc::path data_dir )
                    skip_tapos_check |
                    skip_witness_schedule_check |
                    skip_authority_check;
+   if( _replay_with_validation )
+      skip = 0;
 
    size_t total_block_size = _block_id_to_block.total_block_size();
    const auto& gpo = get_global_properties();
