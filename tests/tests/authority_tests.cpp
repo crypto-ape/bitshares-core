@@ -1168,7 +1168,7 @@ BOOST_FIXTURE_TEST_CASE( get_required_signatures_test, database_fixture )
          op.owner = auth;
          tx.operations.push_back( op );
          set_expiration( db, tx );
-         PUSH_TX( db, tx, database::skip_transaction_signatures | database::skip_authority_check );
+         PUSH_TX( db, tx, database::skip_transaction_signatures );
       } ;
 
       auto get_active = [&](
@@ -1282,7 +1282,7 @@ BOOST_FIXTURE_TEST_CASE( nonminimal_sig_test, database_fixture )
          op.owner = auth;
          tx.operations.push_back( op );
          set_expiration( db, tx );
-         PUSH_TX( db, tx, database::skip_transaction_signatures | database::skip_authority_check );
+         PUSH_TX( db, tx, database::skip_transaction_signatures );
       } ;
 
       auto get_active = [&](
@@ -1369,7 +1369,7 @@ BOOST_FIXTURE_TEST_CASE( parent_owner_test, database_fixture )
          op.owner = owner;
          tx.operations.push_back( op );
          set_expiration( db, tx );
-         PUSH_TX( db, tx, database::skip_transaction_signatures | database::skip_authority_check );
+         PUSH_TX( db, tx, database::skip_transaction_signatures );
       } ;
 
       auto set_auth = [&](
@@ -1461,7 +1461,7 @@ BOOST_FIXTURE_TEST_CASE( missing_owner_auth_test, database_fixture )
          op.owner = owner;
          tx.operations.push_back( op );
          set_expiration( db, tx );
-         PUSH_TX( db, tx, database::skip_transaction_signatures | database::skip_authority_check );
+         PUSH_TX( db, tx, database::skip_transaction_signatures );
       } ;
 
       auto get_active = [&](

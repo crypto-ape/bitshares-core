@@ -635,7 +635,7 @@ processed_transaction database::_apply_transaction(const signed_transaction& trx
    const chain_parameters& chain_parameters = get_global_properties().parameters;
    eval_state._trx = &trx;
 
-   if( !(skip & (skip_transaction_signatures | skip_authority_check) ) )
+   if( !(skip & skip_transaction_signatures) )
    {
       auto get_active = [&]( account_id_type id ) { return &id(*this).active; };
       auto get_owner  = [&]( account_id_type id ) { return &id(*this).owner;  };
@@ -750,8 +750,7 @@ bool database::before_last_checkpoint()const
 }
 
 
-static const uint32_t skip_sigs = database::skip_transaction_signatures | database::skip_authority_check;
-static const uint32_t skip_expensive = skip_sigs | database::skip_witness_signature
+static const uint32_t skip_expensive = database::skip_transaction_signatures | database::skip_witness_signature
                                        | database::skip_merkle_check | database::skip_transaction_dupe_check;
 
 template<typename Trx>
@@ -762,7 +761,7 @@ void database::_precompute_parallel( const Trx* trx, const size_t count, const u
       trx->validate(); // TODO - parallelize wrt confidential operations
       if( !(skip&skip_transaction_dupe_check) )
          trx->id();
-      if( !(skip&skip_sigs) )
+      if( !(skip&skip_transaction_signatures) )
          trx->get_signature_keys( get_chain_id() );
    }
 }
