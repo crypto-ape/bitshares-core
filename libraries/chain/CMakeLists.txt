@@ -1,10 +1,3 @@
-
-add_custom_target( build_hardfork_hpp
-                   COMMAND cat-parts "${CMAKE_CURRENT_SOURCE_DIR}/hardfork.d" "${CMAKE_CURRENT_BINARY_DIR}/include/graphene/chain/hardfork.hpp" )
-set_source_files_properties( "${CMAKE_CURRENT_BINARY_DIR}/include/graphene/chain/hardfork.hpp" PROPERTIES GENERATED TRUE )
-
-add_dependencies( build_hardfork_hpp cat-parts )
-
 file(GLOB HEADERS "include/graphene/chain/*.hpp")
 
 if( GRAPHENE_DISABLE_UNITY_BUILD )
@@ -27,6 +20,8 @@ else( GRAPHENE_DISABLE_UNITY_BUILD )
         database.cpp )
    message( STATUS "Graphene database unity build enabled" )
 endif( GRAPHENE_DISABLE_UNITY_BUILD )
+
+set_source_files_properties( "${CMAKE_CURRENT_BINARY_DIR}/include/graphene/chain/hardfork.hpp" PROPERTIES GENERATED TRUE )
 
 ## SORT .cpp by most likely to change / break compile
 add_library( graphene_chain
@@ -81,6 +76,15 @@ target_include_directories( graphene_chain
 if(MSVC)
   set_source_files_properties( db_init.cpp db_block.cpp database.cpp block_database.cpp PROPERTIES COMPILE_FLAGS "/bigobj" )
 endif(MSVC)
+
+# Support for CMake < 3.7
+if (${CMAKE_VERSION} VERSION_LESS "3.7.0")
+    MESSAGE(STATUS "Configuring for legacy CMake (CMake version ${CMAKE_VERSION} older than 3.7.0)")
+    MESSAGE(STATUS "  Target propertes not supported (SOURCE_DIR, BINARY_DIR)")
+
+    set(GRAPHENE_CHAIN_BIN_LEGACY "${PROJECT_BINARY_DIR}")
+    set(GRAPHENE_CHAIN_SOURCE_LEGACY "${PROJECT_SOURCE_DIR}")
+endif ()
 
 INSTALL( TARGETS
    graphene_chain
